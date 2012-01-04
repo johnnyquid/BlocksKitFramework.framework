@@ -3,6 +3,8 @@
 //  %PROJECT
 //
 
+#import "BKGlobals.h"
+
 /** NSCache with block adding of objects
  
  This category allows you to conditionally add objects to
@@ -23,15 +25,15 @@
  
  This mimics the cache behavior of Ruby on Rails.  The following code:
  
-     @products = Rails.cache.fetch('products') do
-       Product.all
-     end
+	 @products = Rails.cache.fetch('products') do
+	   Product.all
+	 end
  
  becomes:
  
-     NSMutableArray *products = [cache objectForKey:@"products" withGetter:^id{
-       return [Product all];
-     }];
+	 NSMutableArray *products = [cache objectForKey:@"products" withGetter:^id{
+	   return [Product all];
+	 }];
  
  @return The value associated with *key*, or the object returned
  by the block if no value is associated with *key*.
@@ -41,7 +43,11 @@
  */
 - (id)objectForKey:(id)key withGetter:(BKReturnBlock)getterBlock;
 
-/** Called when an object is about to be evicted or removed from the cache. */
-@property (copy) BKSenderBlock willEvictObjectHandler;
+/** Called when an object is about to be evicted from the cache.
+
+ This block callback is an analog for the cache:willEviceObject:
+ method of NSCacheDelegate.
+ */
+@property (nonatomic, copy) void(^willEvictBlock)(NSCache *, id);
 
 @end

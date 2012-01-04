@@ -14,8 +14,8 @@
 
  Includes code by the following:
 
-- Robin Lu.       <https://github.com/robin>.      2009. MIT.
-- Michael Ash.    <https://github.com/mikeash>.    2010. BSD.
+- Robin Lu.	   <https://github.com/robin>.	  2009. MIT.
+- Michael Ash.	<https://github.com/mikeash>.	2010. BSD.
 - Zach Waldowski. <https://github.com/zwaldowski>. 2011. MIT.
 
  @see NSArray(BlocksKit)
@@ -29,6 +29,17 @@
  @param block A single-argument, void-returning code block.
  */
 - (void)each:(BKIndexBlock)block;
+
+/** Enumerates each index in an index set concurrently and executes the
+ given block once per index.
+ 
+ Enumeration will occur on appropriate background queues. 
+ Be aware that the block will not necessarily be executed
+ in order for each index.
+ 
+ @param block A single-argument, void-returning code block.
+ */
+- (void)apply:(BKIndexBlock)block;
 
 /** Loops through an array and returns the index matching the block.
  

@@ -3,7 +3,7 @@
 //  %PROJECT
 //
 
-typedef void (^BKMessageComposeBlock) (MessageComposeResult result);
+#import "BKGlobals.h"
 
 /** MFMessageComposeViewController with block callback in addition to delegation.
  
@@ -20,11 +20,11 @@ typedef void (^BKMessageComposeBlock) (MessageComposeResult result);
 @interface MFMessageComposeViewController (BlocksKit)
 
 /** The block fired on the dismissal of the SMS composition interface.
-
+ 
  This block callback is an analog for the
- messageComposeViewController:didFinishWithResult method
+ messageComposeViewController:didFinishWithResult: method
  of MFMessageComposeViewControllerDelegate.
-*/
-@property (copy) BKMessageComposeBlock completionHandler;
+ */
+@property (nonatomic, copy) void(^completionBlock)(MFMessageComposeViewController *, MessageComposeResult);
 
 @end

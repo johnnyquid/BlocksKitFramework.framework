@@ -13,7 +13,7 @@
 
  Includes code by the following:
 
-- Mirko Kiefer.   <https://github.com/mirkok>.     2011.
+- Mirko Kiefer.   <https://github.com/mirkok>.	 2011.
 - Zach Waldowski. <https://github.com/zwaldowski>. 2011. MIT.
 
  @see NSArray(BlocksKit)
@@ -26,6 +26,19 @@
  @param block A block that performs an action using a key/value pair.
  */
 - (void)each:(BKKeyValueBlock)block;
+
+/** Enumerates through the dictionary concurrently and executes
+ the given block once for each pair.
+ 
+ Enumeration will occur on appropriate background queues;
+ the system will spawn threads as need for execution. This
+ will have a noticeable speed increase, especially on dual-core
+ devices, but you *must* be aware of the thread safety of the
+ objects you message from within the block.
+ 
+ @param block A block that performs an action using a key/value pair.
+ */
+- (void)apply:(BKKeyValueBlock)block;
 
 /** Loops through a dictionary to find the key/value pairs matching the block.
  

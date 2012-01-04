@@ -10,18 +10,19 @@
 #import "NSDictionary+BlocksKit.h"
 #import "NSIndexSet+BlocksKit.h"
 
-#ifndef __BKMacros_h__
-#define __BKMacros_h__
+#ifndef __BKMacros__
+#define __BKMacros__
 
 #define EACH_WRAPPER(...) (^{ __block CFMutableDictionaryRef MA_eachTable = nil; \
-        (void)MA_eachTable; \
-        __typeof__(__VA_ARGS__) MA_retval = __VA_ARGS__; \
-        if(MA_eachTable) \
-            CFRelease(MA_eachTable); \
-        return MA_retval; \
-    }())
+		(void)MA_eachTable; \
+		__typeof__(__VA_ARGS__) MA_retval = __VA_ARGS__; \
+		if(MA_eachTable) \
+			CFRelease(MA_eachTable); \
+		return MA_retval; \
+	}())
 
 #define EACH(collection, ...) EACH_WRAPPER([collection each:^(id obj) { __VA_ARGS__ }];
+#define APPLY(collection, ...) EACH_WRAPPER([collection apply:^(id obj) { __VA_ARGS__ }];
 #define MAP(collection, ...) EACH_WRAPPER([collection map: ^id (id obj) { return (__VA_ARGS__); }])
 #define SELECT(collection, ...) EACH_WRAPPER([collection select: ^BOOL (id obj) { return (__VA_ARGS__) != 0; }])
 #define REJECT(collection, ...) EACH_WRAPPER([collection select: ^BOOL (id obj) { return (__VA_ARGS__) == 0; }])

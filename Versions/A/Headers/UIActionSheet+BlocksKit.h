@@ -14,19 +14,19 @@
  addButtonWithTitle:handler: to make sure nothing breaks.
 
  A typical invocation might go like this:
-     UIActionSheet *testSheet = [UIActionSheet sheetWithTitle:@"Please select one."];
-     [testSheet addButtonWithTitle:@"Zip" handler:^{ NSLog(@"Zip!"); }];
-     [testSheet addButtonWithTitle:@"Zap" handler:^{ NSLog(@"Zap!"); }];
-     [testSheet addButtonWithTitle:@"Zop" handler:^{ NSLog(@"Zop!"); }];
-     [testSheet setDestructiveButtonWithTitle:@"No!" handler:^{ NSLog(@"Fine!"); }];
-     [testSheet setCancelButtonWithTitle:nil handler:^{ NSLog(@"Never mind, then!"); }];
-     [testSheet showInView:self.view];
+	 UIActionSheet *testSheet = [UIActionSheet actionSheetWithTitle:@"Please select one."];
+	 [testSheet addButtonWithTitle:@"Zip" handler:^{ NSLog(@"Zip!"); }];
+	 [testSheet addButtonWithTitle:@"Zap" handler:^{ NSLog(@"Zap!"); }];
+	 [testSheet addButtonWithTitle:@"Zop" handler:^{ NSLog(@"Zop!"); }];
+	 [testSheet setDestructiveButtonWithTitle:@"No!" handler:^{ NSLog(@"Fine!"); }];
+	 [testSheet setCancelButtonWithTitle:nil handler:^{ NSLog(@"Never mind, then!"); }];
+	 [testSheet showInView:self.view];
 
  Includes code by the following:
 
  - Landon Fuller, "Using Blocks".  <http://landonf.bikemonkey.org>.
  - Peter Steinberger. <https://github.com/steipete>.   2011. MIT.
- - Zach Waldowski.    <https://github.com/zwaldowski>. 2011. MIT.
+ - Zach Waldowski.	<https://github.com/zwaldowski>. 2011. MIT.
 
  @warning UIActionSheet is only available on iOS or in a Mac app using Chameleon.
  */
@@ -41,7 +41,7 @@
  @param title The header of the action sheet.
  @return A newly created action sheet.
  */
-+ (id)sheetWithTitle:(NSString *)title;
++ (id)actionSheetWithTitle:(NSString *)title;
 
 /** Returns a configured action sheet with only a title and cancel button.
 
@@ -62,10 +62,10 @@
 - (NSInteger)addButtonWithTitle:(NSString *)title handler:(BKBlock)block;
 
 /** Set the destructive (red) button with an associated code block.
-
- If setDestructiveButtonWithTitle:handler: is called multiple times, the
- previously added destructive buttons will become normal buttons and
- will remain.
+ 
+ @warning Because buttons cannot be removed from an action sheet,
+ be aware that the effects of calling this method are cumulative.
+ Previously added destructive buttons will become normal buttons.
 
  @param title The text of the button.
  @param block A block of code.
@@ -77,10 +77,7 @@
  `block` can be set to `nil`, but this is generally useless as
  the cancel button is configured already to do nothing.
  
- If you are running on iPad, passing `nil` for the title will allow you
- to hide the cancel button but continue to use the cancel block.
- 
- iPhone useers will have the button shown regardless; if the title is
+ iPhone users will have the button shown regardless; if the title is
  set to `nil`, it will automatically be localized.
  
  @param title The text of the button.
@@ -91,6 +88,20 @@
 ///-----------------------------------
 /// @name Altering actions
 ///-----------------------------------
+
+/** Sets the block that is to be fired when a button is pressed.
+ 
+ @param block A code block, or nil to set no response.
+ @param index The index of a button already added to the action sheet.
+*/
+- (void)setHandler:(BKBlock)block forButtonAtIndex:(NSInteger)index;
+
+/** The block that is to be fired when a button is pressed.
+ 
+ @param index The index of a button already added to the action sheet.
+ @return A code block, or nil if no block is assigned.
+ */
+- (BKBlock)handlerForButtonAtIndex:(NSInteger)index;
 
 /** The block to be fired when the action sheet is dismissed with the cancel
  button and/or action.
@@ -103,15 +114,15 @@
 @property (nonatomic, copy) BKBlock cancelBlock;
 
 /** The block to be fired before the action sheet will show. */
-@property (nonatomic, copy) BKBlock willShowBlock;
+@property (nonatomic, copy) void (^willShowBlock)(UIActionSheet *);
 
 /** The block to be fired when the action sheet shows. */
-@property (nonatomic, copy) BKBlock didShowBlock;
+@property (nonatomic, copy) void (^didShowBlock)(UIActionSheet *);
 
 /** The block to be fired before the action sheet will dismiss. */
-@property (nonatomic, copy) BKIndexBlock willDismissBlock;
+@property (nonatomic, copy) void (^willDismissBlock)(UIActionSheet *, NSInteger);
 
 /** The block to be fired after the action sheet dismisses. */
-@property (nonatomic, copy) BKIndexBlock didDismissBlock;
+@property (nonatomic, copy) void (^didDismissBlock)(UIActionSheet *, NSInteger);
 
 @end

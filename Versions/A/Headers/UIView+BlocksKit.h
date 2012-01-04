@@ -10,7 +10,7 @@
  Includes code by the following:
 
  - Kevin O'Neill.  <https://github.com/kevinoneill>. 2011. BSD.
- - Jake Marsh.     <https://github.com/jakemarsh>.   2011. 
+ - Jake Marsh.	 <https://github.com/jakemarsh>.   2011. 
  - Zach Waldowski. <https://github.com/zwaldowski>.  2011. MIT.
 
  @warning UIView is only available on iOS or in a Mac app using Chameleon.
@@ -23,6 +23,10 @@
  of fingers tapping any number of times on a view.  An instance
  of UITapGesture recognizer is allocated for the block and added
  to the recieving view.
+ 
+ @warning This method has an _additive_ effect. Do not call it multiple
+ times to set-up or tear-down. The view will discard the gesture recognizer
+ on release.
 
  @param numberOfTouches The number of fingers tapping that will trigger the block.
  @param numberOfTaps The number of taps required to trigger the block.
@@ -33,6 +37,10 @@
 - (void)whenTouches:(NSUInteger)numberOfTouches tapped:(NSUInteger)numberOfTaps handler:(BKBlock)block;
 
 /** Adds a recognizer for one finger tapping once.
+ 
+ @warning This method has an _additive_ effect. Do not call it multiple
+ times to set-up or tear-down. The view will discard the gesture recognizer
+ on release.
 
  @param block The handler for the tap recognizer
  @see whenDoubleTapped:
@@ -42,45 +50,45 @@
 
 /** Adds a recognizer for one finger tapping twice.
  
+ @warning This method has an _additive_ effect. Do not call it multiple
+ times to set-up or tear-down. The view will discard the gesture recognizer
+ on release.
+ 
  @param block The handler for the tap recognizer
  @see whenTapped:
  @see whenTouches:tapped:handler:
  */
 - (void)whenDoubleTapped:(BKBlock)block;
 
-/** Adds a block that gets called on a finger down.
+/** A convenience wrapper that non-recursively loops through the subviews of a view.
+ 
+ @param block A code block that interacts with a UIView sender.
+ */
+- (void)eachSubview:(void(^)(UIView *))block;
 
+/** The block that gets called on a finger down.
+ 
  Internally, this method overrides the touchesBegan:withEvent:
  selector of UIView and is mechanically similar to
  UIControlEventTouchDown.
-
- @param block The handler for the touch recognizer
  */
-- (void)whenTouchedDown:(BKTouchBlock)block;
+@property (nonatomic, copy) BKTouchBlock onTouchDownBlock;
 
-/** Adds a block that gets called on a finger drag.
+/** The block that gets called on a finger drag.
  
  Internally, this method overrides the touchesMoved:withEvent:
  selector of UIView.
  
  @param block The handler for the touch recognizer
  */
-- (void)whenTouchMove:(BKTouchBlock)block;
+@property (nonatomic, copy) BKTouchBlock onTouchMoveBlock;
 
-/** Adds a block that gets called on a finger up.
+/** The block that gets called on a finger up.
  
  Internally, this method overrides the touchesBegan:withEvent:
  selector of UIView and is mechanically similar to
  UIControlEventTouchCancel.
- 
- @param block The handler for the touch recognizer
  */
-- (void)whenTouchedUp:(BKTouchBlock)block;
-
-/** A convenience wrapper that non-recursively loops through the subviews of a view.
- 
- @param block A code block that interacts with a UIView sender.
- */
-- (void)eachSubview:(BKViewBlock)block;
+@property (nonatomic, copy) BKTouchBlock onTouchUpBlock;
 
 @end
